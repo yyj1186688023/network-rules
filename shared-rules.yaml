@@ -1,0 +1,4 @@
+# mesl-bulk-rules v1
+# Routing matches only; no subscription URLs or credentials.
+payload:
+  - DOMAIN,release-assets.githubusercontent.com
