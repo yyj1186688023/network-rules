@@ -1,0 +1,3 @@
+# mesl-media-rules v1 — confirmed subset only
+payload:
+  - DOMAIN-SUFFIX,googlevideo.com
