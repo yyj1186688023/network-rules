@@ -26,5 +26,22 @@ const main = (config) => {
   if (!existing) config['proxy-groups'].push({name: group, type: 'select', proxies: candidates});
   const rule = 'RULE-SET,' + provider + ',' + group;
   config.rules = [rule].concat(config.rules.filter(r => r !== rule));
+  const mediaProvider = 'user-media';
+  const mediaGroup = '低倍率媒体';
+  const mediaUrl = 'https://raw.githubusercontent.com/yyj1186688023/network-rules/main/media-rules.yaml';
+  const mediaCandidates = ['🇯🇵 日本 01 [0.3X]', 'MESL'];
+  const oldMedia = config['rule-providers'][mediaProvider];
+  if (oldMedia && oldMedia.url !== mediaUrl) throw new Error('Media provider name already used');
+  const existingMedia = config['proxy-groups'].find(p => p.name === mediaGroup);
+  if (existingMedia && (existingMedia.type !== 'select' || JSON.stringify(existingMedia.proxies) !== JSON.stringify(mediaCandidates))) {
+    throw new Error('Media group name already used');
+  }
+  config['rule-providers'][mediaProvider] = {
+    type: 'http', behavior: 'classical', format: 'yaml',
+    path: './rule-providers/user-media.yaml', url: mediaUrl, interval: 86400, proxy: 'MESL'
+  };
+  if (!existingMedia) config['proxy-groups'].push({name: mediaGroup, type: 'select', proxies: mediaCandidates});
+  const mediaRule = 'RULE-SET,' + mediaProvider + ',' + mediaGroup;
+  config.rules = [mediaRule].concat(config.rules.filter(r => r !== mediaRule));
   return config;
 };
